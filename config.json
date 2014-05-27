@@ -4,6 +4,5 @@
 	"timeout":120,
 	"expire":200, 
 	"content_type":"application/x-javascript; charset=utf-8",
-	"handler":"StreamLine.events",
-	"url":"http://centos/domains/streamline/"
+	"handler":"StreamLine.events"
 }

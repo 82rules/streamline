@@ -11,6 +11,7 @@ polling or pinging for server status on interval.
 
 It allows for User -> Users and Server -> User(s) communication streams 
 Allowing features such as 
+
 	* Message Notifications
 	* Chat
 	* Status Notifications
