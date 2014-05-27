@@ -1,10 +1,10 @@
 <html>
 	<head>
-	<script src="http://centos/domains/streamline/client/streamline.js"></script>
+	<script src="http://localhost/streamline/client/streamline.js"></script>
 	<script>
 
 		window.onload = function(){
-			window.StreamLine.subscribe("http://centos/domains/streamline/123/456/", function(data){
+			window.StreamLine.subscribe("http://localhost/streamline/123/456/", function(data){
 				document.getElementById("chat").innerHTML += (data + "<br>");
 			});
 		};
@@ -12,7 +12,7 @@
 		function sendMessage(event, item){
 			if (event.keyCode == 13) {
 
-				StreamLine.publish('http://centos/domains/streamline/123/456/',item.value,console.log)
+				StreamLine.publish('http://localhost/streamline/123/456/',item.value,console.log)
 				item.value = '';
 			}
 		}
