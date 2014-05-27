@@ -34,6 +34,7 @@ window['StreamLine'] = window['StreamLine'] ? window['StreamLine'] : {};
 		    if(xhr.readyState == 4) {
 		    	/// connection drop, reconnecting
 		        StreamLine.subscribe(channel,handle);
+		        filterLoaded = ''; 
 		    }
 		}
 
