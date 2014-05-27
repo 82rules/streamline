@@ -1,0 +1,9 @@
+{
+	"host":"localhost",
+	"port":"6379",
+	"timeout":10,
+	"expire":200, 
+	"content_type":"application/x-javascript; charset=utf-8",
+	"handler":"StreamLine.events",
+	"url":"http://centos/domains/streamline/"
+}
