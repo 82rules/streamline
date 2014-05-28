@@ -2,7 +2,7 @@ window['StreamLine'] = window['StreamLine'] ? window['StreamLine'] : {};
 (function(StreamLine){
 
 	StreamLine = StreamLine ? StreamLine : {}; 
-	StreamLine.handlers = {}; 
+	
 
 	StreamLine.maxReconnects = 10; 
 	StreamLine.channelProperties = {}; 
@@ -25,21 +25,40 @@ window['StreamLine'] = window['StreamLine'] ? window['StreamLine'] : {};
 			
 			StreamLine.channelProperties[channel].reconnectAttempts=StreamLine.maxReconnects;
 			StreamLine.channelProperties[channel].timeout;  
+			StreamLine.channelProperties[channel].handlers = [handle];
 
+		}
+		else {
+			/// allows multiple functions to subscribe to same channel (multi event updates) 
+			if (StreamLine.channelProperties[channel].handlers.indexOf(handle) == -1) {
+
+				StreamLine.channelProperties[channel].handlers.push(handle);
+				return; /// we dont want to resent connection and handling if another function already has
+				
+			}
 		}
 
 		var filterLoaded = '';  /// used to filter data paseed thru progress to avoid replicated data imports
 
 		setTimeout(function(){
 
+			
 			var xhr = StreamLine.request(); 
 
 			xhr.open("GET", channel, true)
 
 			xhr.onprogress = function () {
 			  var command =  xhr.responseText.toString().replace(filterLoaded,'');
+			  
 			  filterLoaded = xhr.responseText.toString(); 
-			  handle(command);
+
+			  for(var i =0; i<StreamLine.channelProperties[channel].handlers.length; i++){
+
+			  	/// push data to every handle that susbscribed to the channel
+			  	StreamLine.channelProperties[channel].handlers[i](command);
+
+			  }
+
 			}
 
 			xhr.onreadystatechange = function() { //Call a function when the state changes.
@@ -55,8 +74,11 @@ window['StreamLine'] = window['StreamLine'] ? window['StreamLine'] : {};
 		    	StreamLine.channelProperties[channel].reconnectAttempts = StreamLine.channelProperties[channel].reconnectAttempts - 1; 
 
 		    	if (StreamLine.channelProperties[channel].reconnectAttempts > 0 ) {
+		    		
 		    		console.log("Attempting to reconnect to channel " + channel + " attempts left: " + StreamLine.channelProperties[channel].reconnectAttempts ); 
+			       
 			        StreamLine.subscribe(channel,handle);
+			        
 			        filterLoaded = ''; 
 
 		    		/// if a reconnection was made, timeout will reset number of reconnection attempts available 
