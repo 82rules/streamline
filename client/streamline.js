@@ -4,6 +4,10 @@ window['StreamLine'] = window['StreamLine'] ? window['StreamLine'] : {};
 	StreamLine = StreamLine ? StreamLine : {}; 
 	StreamLine.handlers = {}; 
 
+	StreamLine.maxReconnects = 10; 
+	StreamLine.channelProperties = {}; 
+
+
 	StreamLine.events = function(stream){
 		console.log(stream); 
 	}
@@ -14,9 +18,17 @@ window['StreamLine'] = window['StreamLine'] ? window['StreamLine'] : {};
 
 	StreamLine.subscribe = function(channel, handle){
 		
-		console.log("subscribing to " + channel);
+		/// timeout and reconnects per channel to avoid race or conflict
+		if (!StreamLine.channelProperties[channel]) {
+			
+			StreamLine.channelProperties[channel] = {}; 
+			
+			StreamLine.channelProperties[channel].reconnectAttempts=StreamLine.maxReconnects;
+			StreamLine.channelProperties[channel].timeout;  
 
-		var filterLoaded = ''; 
+		}
+
+		var filterLoaded = '';  /// used to filter data paseed thru progress to avoid replicated data imports
 
 		setTimeout(function(){
 
@@ -30,17 +42,37 @@ window['StreamLine'] = window['StreamLine'] ? window['StreamLine'] : {};
 			  handle(command);
 			}
 
-			xhr.onreadystatechange = function() {//Call a function when the state changes.
+			xhr.onreadystatechange = function() { //Call a function when the state changes.
 		    if(xhr.readyState == 4) {
 		    	/// connection drop, reconnecting
-		        StreamLine.subscribe(channel,handle);
-		        filterLoaded = ''; 
+
+		    	/// if timeout is available, a reconnection attempt was made but not successful, so clear it 
+		    	if ( StreamLine.channelProperties[channel].timeout ){
+		    		clearTimeout( StreamLine.channelProperties[channel].timeout );
+		    	}
+
+		    	/// draw from reconnect attempts to avoid forever attempts to reconnect on a non responsive channel
+		    	StreamLine.channelProperties[channel].reconnectAttempts = StreamLine.channelProperties[channel].reconnectAttempts - 1; 
+
+		    	if (StreamLine.channelProperties[channel].reconnectAttempts > 0 ) {
+		    		console.log("Attempting to reconnect to channel " + channel + " attempts left: " + StreamLine.channelProperties[channel].reconnectAttempts ); 
+			        StreamLine.subscribe(channel,handle);
+			        filterLoaded = ''; 
+
+		    		/// if a reconnection was made, timeout will reset number of reconnection attempts available 
+			        StreamLine.channelProperties[channel].timeout = setTimeout(function(){
+			        	StreamLine.channelProperties[channel].reconnectAttempts = StreamLine.maxReconnects; 
+			        }, 2000); 
+			    }
+			    else {
+			    	console.log("Maxed out on reconnect attempts on channel" + channel);
+			    }
 		    }
 		}
 
 			xhr.send();
 
-		},1000);
+		},1000); // setTimeout to avoid forever load of browser
 
 
 	}
