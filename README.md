@@ -17,6 +17,13 @@ Allowing features such as
 	* Status Notifications
 	* Dynamic Content Push
 
+## Features
+	
+	* Javascript Allows for multiple events on same channel
+	* Auto reconnects on dropped connections
+	* No need for external services
+
+
 #How It Works
 There is a server side and client side component, 
 The client side creates a stream channel to the target subscription via a GET
@@ -74,7 +81,10 @@ I am taking advantage of redis's built in PubSub mechanism. However, you can eas
 exchange redis for NodeJS or any other broadcast system as long as it persists connection
 between message blocks. 
 
+#Contributing
 Please feel free to contribute additional server listeners and javascript. 
+
+If you are going to create a server side listener and publisher, share config with config.json
 
 I'm really happy with how this solution turned out. 
 Questions, comments, just ask. 
