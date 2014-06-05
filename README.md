@@ -69,6 +69,11 @@ The javascript library was coded minimally to be stand alone, however you can em
 ever technique you'd like to communicate with your subscription channels. 
 
 
+#NODEJS
+in package.json
+add  "streamline":"82rules/streamline"
+npm instlal 
+
 ### Testing Channels
 I use redis-cli to publish to my test channels to make sure my server side broadcasts
 are pushed to the client successfully. 
