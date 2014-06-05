@@ -1,15 +1,25 @@
-// app/subscribe.js
+// app/streamline.js
 
 // sample express routes
 /*
+	app.get('/streamline/',function(req,res){
+		fs = require('fs');
+		fs.readFile('./node_modules/streamline/client/streamline.js', 'utf8', function (err,data) {
+		  if (err) {
+		    return console.log(err);
+		  }
+		  res.send(data);
+		});
+	});
+
 	app.get('/streamline/:channel',function(req,res){
-		var subscribe = require("./streamline.js"); 
-		subscribe.subscribe("/chat/channel/"+req.params.channel,res); 
+		var streamline = require("streamline"); 
+		streamline.subscribe("/chat/channel/"+req.params.channel,res); 
 	});
 
 	app.post('/streamline/:channel',function(req,res){
-		var streamline = require("./streamline.js"); 
-		streamline.publish("/chat/channel/"+req.params.channel,req.rawBody,res); 
+		var streamline = require("streamline"); 
+		res.send({status:streamline.publish("/chat/channel/"+req.params.channel,req.rawBody,res)}); 
 	});
 */
 var redis = require("redis"), 
