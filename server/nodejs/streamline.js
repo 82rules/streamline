@@ -26,20 +26,23 @@ var redis = require("redis"),
 subscribe = redis.createClient(),
 publish = redis.createClient(); 
 
-module.exports.subscribe = function(channel, response) {
+module.exports.subscribe = function(masterchannel, response) {
 	
 	response.setHeader('Connection', 'Transfer-Encoding');
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Transfer-Encoding', 'chunked');
     response.write("{'status':'subscribed'}");
+	
+	subscribe.subscribe(masterchannel);
 
    	subscribe.on("error", function(){
 	  response.send("{'status':'disconnected'}");
 	})
 	subscribe.on("message", function(channel, message){
-	  response.write(message);;
+		if (channel == masterchannel) {
+		  response.write(message);;
+		}
 	});
-	subscribe.subscribe(channel);
     
 };
 
