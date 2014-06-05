@@ -14,7 +14,10 @@
 
 	app.get('/streamline/:channel',function(req,res){
 		var streamline = require("streamline"); 
-		streamline.subscribe("/chat/channel/"+req.params.channel,res); 
+		streamline.subscribe("/chat/channel/"+req.params.channel,res, function(message){
+			console.log(message)
+			res.write(message);
+		}); 
 	});
 
 	app.post('/streamline/:channel',function(req,res){
@@ -22,11 +25,13 @@
 		res.send({status:streamline.publish("/chat/channel/"+req.params.channel,req.rawBody,res)}); 
 	});
 */
+var data = require(__dirname + '/../../config.json');
+var settings = JSON.parse(data);
 var redis = require("redis"), 
-subscribe = redis.createClient(),
-publish = redis.createClient(); 
+subscribe = redis.createClient(data.host,data.port),
+publish = redis.createClient(data.host,data.port); 
 
-module.exports.subscribe = function(masterchannel, response) {
+module.exports.subscribe = function(masterchannel, response, handle) {
 	
 	response.setHeader('Connection', 'Transfer-Encoding');
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -38,9 +43,15 @@ module.exports.subscribe = function(masterchannel, response) {
    	subscribe.on("error", function(){
 	  response.send("{'status':'disconnected'}");
 	})
+
 	subscribe.on("message", function(channel, message){
 		if (channel == masterchannel) {
-		  response.write(message);;
+			if (handle) {
+				handle(message);
+			}
+		  	else {
+		  		response.write(message);;
+		  	}
 		}
 	});
     
@@ -50,4 +61,5 @@ module.exports.publish = function(channel, data, response) {
 	publish.publish(channel,data); 
 	return true
 };
+
 
