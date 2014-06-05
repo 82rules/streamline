@@ -1,0 +1,38 @@
+{
+  "name": "streamline",
+  "version": "0.1.1",
+  "description": "Streamline PubSub Realtime Library",
+  "keywords": [
+    "redis",
+    "database",
+    "streamline",
+    "realtime",
+    "chat",
+    "publish",
+    "subscribe",
+    "pubsub"
+  ],
+  "author": {
+    "name": "Rulian Estivalletti",
+    "email": "rulian@gmail.com"
+  },
+  "main": "subscribe.js",
+  "scripts": {
+    "test": "node ./test.js"
+  },
+  "devDependencies": {
+   	"redis":"*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/82rules/streamline.git"
+  },
+  "readme": " ",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/82rules/streamline/issues"
+  },
+  "latest":"streamline@0.1.1",
+  "_id": "streamline@0.1.1",
+  "_from": "streamline@*"
+}
