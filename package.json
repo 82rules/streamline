@@ -16,7 +16,7 @@
     "name": "Rulian Estivalletti",
     "email": "rulian@gmail.com"
   },
-  "main": "server/nodejs/subscribe.js",
+  "main": "server/nodejs/streamline.js",
   "devDependencies": {
    	"redis":"*"
   },
