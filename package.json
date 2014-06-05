@@ -18,8 +18,7 @@
   },
   "main": "server/nodejs/streamline.js",
    "dependencies": {
-    "redis":"*",
-    "jsonfile":"*"
+    "redis":"*"
   },
   "repository": {
     "type": "git",

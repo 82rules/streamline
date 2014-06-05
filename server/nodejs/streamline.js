@@ -26,27 +26,23 @@
 	});
 */
 
-var redis, subscribe, publish, settings; 
-var jsonfile = require("jsonfile");
+var redis = require("redis"), subscribe, publish, settings; 
+var fs = require("fs"); 
+var settings = JSON.parse(fs.readFileSync(__dirname + '/../../config.json').toString());
 
-jsonfile.readFile(__dirname + '/../../config.json', function(err, obj) {
-  	
-  	settings=obj; 
-  	redis = require("redis");
-	subscribe = redis.createClient(settings.host,settings.port);
-	publish = redis.createClient(settings.host,settings.port); 
-
-});
-
+subscribe = redis.createClient(settings.port, settings.host);
+publish = redis.createClient(settings.port, settings.host); 
 
 module.exports.subscribe = function(masterchannel, response, handle) {
 	
 	response.setHeader('Connection', 'Transfer-Encoding');
     response.setHeader('Content-Type', 'text/html; charset=utf-8');
     response.setHeader('Transfer-Encoding', 'chunked');
-    response.write("{'status':'subscribed'}");
-	
+
+
 	subscribe.subscribe(masterchannel);
+
+	response.write("{'status':'subscribed'}");
 
    	subscribe.on("error", function(){
 	  response.send("{'status':'disconnected'}");
@@ -61,13 +57,17 @@ module.exports.subscribe = function(masterchannel, response, handle) {
 		  		response.write(message);;
 		  	}
 		}
+
 	});
-    
-};
+
+}
 
 module.exports.publish = function(channel, data, response) {
+
 	publish.publish(channel,data); 
-	return true
-};
+	return true; 
+}
+
+
 
 
