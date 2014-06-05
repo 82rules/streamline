@@ -20,7 +20,7 @@
    "dependencies": {
     "redis":"*",
     "jsonfile":"*"
-  }
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/82rules/streamline.git"
