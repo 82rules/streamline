@@ -17,9 +17,10 @@
     "email": "rulian@gmail.com"
   },
   "main": "server/nodejs/streamline.js",
-  "devDependencies": {
-   	"redis":"*"
-  },
+   "dependencies": {
+    "redis":"*",
+    "jsonfile":"*"
+  }
   "repository": {
     "type": "git",
     "url": "git://github.com/82rules/streamline.git"

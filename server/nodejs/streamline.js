@@ -25,11 +25,19 @@
 		res.send({status:streamline.publish("/chat/channel/"+req.params.channel,req.rawBody,res)}); 
 	});
 */
-var data = require(__dirname + '/../../config.json');
-var settings = JSON.parse(data);
-var redis = require("redis"), 
-subscribe = redis.createClient(data.host,data.port),
-publish = redis.createClient(data.host,data.port); 
+
+var redis, subscribe, publish, settings; 
+var jsonfile = require("jsonfile");
+
+jsonfile.readFile(__dirname + '/../../config.json', function(err, obj) {
+  	
+  	settings=obj; 
+  	redis = require("redis");
+	subscribe = redis.createClient(settings.host,settings.port);
+	publish = redis.createClient(settings.host,settings.port); 
+
+});
+
 
 module.exports.subscribe = function(masterchannel, response, handle) {
 	
